@@ -4,25 +4,26 @@ namespace Task1
 {
     internal class Program
     {
-        static void DisplayArray(int size, int[] array)
+        static void DisplayArray(int[] array)
         {
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                if (i < (size - 1))
-                {
-                    Console.Write($"{array[i]},");
-                }
-                else
-                {
-                    Console.Write($"{array[i]}]\n");
-                }
+                Console.Write($"{array[i]},");
             }
+
+            Console.Write("]\n");
         }
 
-        static bool ConvertToDuodecimal(int decimalNumber)
+        static bool ValidateNumberContainsExactlyAA(int decimalNumber)
         {
             string duodecimal = "";
             char duodecimalDigit;
+            int counterAA = 0;
+
+            if(decimalNumber < 0)
+            {
+                decimalNumber = -decimalNumber;
+            }
 
             while (decimalNumber > 0)
             {
@@ -39,15 +40,25 @@ namespace Task1
 
                 duodecimal = duodecimalDigit + duodecimal;
 
-                if(duodecimal.Contains("AA"))
-                {
-                    return true;
-                }
-
                 decimalNumber /= 12;
             }
 
-            return false;
+            for(int i = 0; i<duodecimal.Length; i++)
+            {
+                if (duodecimal[i] == 'A')
+                {
+                    counterAA++;
+                }
+            }
+
+            if(counterAA == 2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         static void Main(string[] args)
@@ -61,13 +72,21 @@ namespace Task1
             int numberA = int.Parse(inputA);
             int numberB = int.Parse(inputB);
 
-            if(numberB >= 130)
+            if(numberB < numberA)
+            {
+                int temp = numberA;
+                numberA = numberB;
+                numberB = temp;
+            }
+
+            // 130 && -130 are the numbers closest to 0 that contains exactly two AA symbols in its duodecimal representation.
+            if (numberB >= 130 || numberA <= -130)
             {
                 Console.WriteLine("Numbers which in their duodecimal representation have exactly two symbols A are:");
 
                 for (int i = numberA; i <= numberB; i++)
                 {
-                    if (ConvertToDuodecimal(i))
+                    if (ValidateNumberContainsExactlyAA(i))
                     {
                         Console.WriteLine(i);
                     }
@@ -99,16 +118,7 @@ namespace Task1
             }
 
             int checkDigit = 11 - (sumProducts % 11);
-            string formattedCheckDigit;
-
-            if (checkDigit == 10)
-            {
-                formattedCheckDigit = "X";
-            }
-            else
-            {
-                formattedCheckDigit = checkDigit.ToString();
-            }
+            string formattedCheckDigit = checkDigit == 10 ? "X" : checkDigit.ToString(); ;
 
             isbn = string.Format("{0}-{1}-{2}-{3}",
             isbn[0],
@@ -142,7 +152,7 @@ namespace Task1
             Console.WriteLine("Original Array:");
             Console.Write("[");
 
-            DisplayArray(numberElements, originalArray);
+            DisplayArray(originalArray);
 
             tempArray[0] = originalArray[0];
 
@@ -160,8 +170,7 @@ namespace Task1
 
                 if (!isDuplicate)
                 {
-                    tempArray[uniqueCount] = originalArray[i];
-                    uniqueCount++;
+                    tempArray[uniqueCount++] = originalArray[i];
                 }
             }
 
@@ -175,7 +184,7 @@ namespace Task1
             Console.WriteLine("Only Once Array:");
             Console.Write("[");
 
-            DisplayArray(uniqueCount, finalArray);
+            DisplayArray(finalArray);
         }
     }
 }
