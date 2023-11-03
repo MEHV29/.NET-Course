@@ -51,14 +51,7 @@ namespace Task1
                 }
             }
 
-            if(counterAA == 2)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return counterAA == 2;
         }
 
         static void Main(string[] args)
