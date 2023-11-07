@@ -39,22 +39,26 @@
             Console.WriteLine($"Sum of matrix elements is: {diagonalMatrix.Track()}\n");
             Console.WriteLine($"Size of matrix is: {diagonalMatrix.Size}\n");
 
-            DiagonalMatrix diagonalMatrix2 = new DiagonalMatrix(1,2,3,4,5);
-            diagonalMatrix2[0, 0] = 5;
+            DiagonalMatrix diagonalMatrix2 = new DiagonalMatrix(1,2,3,4,3);
+            diagonalMatrix2[0, 0] = 4;
             Console.WriteLine($"{diagonalMatrix2.ToString()}");
             Console.WriteLine($"Value on [0,0] is: {diagonalMatrix2[0, 0]}");
             Console.WriteLine($"Sum of matrix elements is: {diagonalMatrix2.Track()}\n");
             Console.WriteLine($"Size of matrix is: {diagonalMatrix2.Size}\n");
 
-            DiagonalMatrix diagonalMatrix3 = new DiagonalMatrix(1, 2, 3, 4, 5);
+            DiagonalMatrix diagonalMatrix3 = new DiagonalMatrix(1, 2, 3, 4, 3);
             Console.WriteLine($"Sum of matrix elements is: {diagonalMatrix3.Track()}");
             Console.WriteLine($"{diagonalMatrix3.ToString()}");
             Console.WriteLine($"Are equals? {diagonalMatrix3.Equals(diagonalMatrix2)}");
-            diagonalMatrix3[0, 0] = 5;
+            diagonalMatrix3[0, 0] = 4;
             Console.WriteLine($"Sum of matrix elements is: {diagonalMatrix3.Track()}");
             Console.WriteLine($"{diagonalMatrix3.ToString()}");
-            Console.WriteLine($"Are equals? {diagonalMatrix3.Equals(diagonalMatrix2)}");
-            
+            Console.WriteLine($"Are equals? {diagonalMatrix3.Equals(diagonalMatrix2)}\n");
+
+            DiagonalMatrix resultMatrix = diagonalMatrix2.Extension(diagonalMatrix);
+            Console.WriteLine($"{resultMatrix.ToString()}");
+            Console.WriteLine($"Sum of matrix elements is: {resultMatrix.Track()}");
+
 
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();

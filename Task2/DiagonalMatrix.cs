@@ -98,6 +98,7 @@ namespace Task2
                 for (int j = 0; j < elementsLocatedOnDiagonal.Length; j++)
                 {
                     output += this[i,j];
+                    if (j < elementsLocatedOnDiagonal.Length - 1) output += ",";
                 }
                 output += "]\n";
                 if (i < elementsLocatedOnDiagonal.Length - 1) output += "[";
@@ -112,6 +113,21 @@ namespace Task2
             if(size == 0) output += "]";
 
             return output;
+        }
+
+        public DiagonalMatrix Extension(DiagonalMatrix diagonalMatrix)
+        {
+            int[] result; 
+            if (diagonalMatrix.Size < this.size) result = new int[size];
+            else if(diagonalMatrix.Size > this.size) result = new int[diagonalMatrix.Size];
+            else result = new int[size];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = elementsLocatedOnDiagonal[i] + diagonalMatrix[i, i];
+            }
+
+            return new DiagonalMatrix(result);
         }
     }
 }
