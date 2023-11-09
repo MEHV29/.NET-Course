@@ -5,25 +5,13 @@
         static void Main(string[] args)
         {
             //Task 2.1
-            Point point = new Point();
-            point.Mass = -1;
-            point.X = 0; 
-            point.Y = 0;
-            point.Z = 0;
+            Point point = new Point(0, 0, 0, 0.5678);
             Console.WriteLine($"Point mass is {point.Mass}");
             Console.WriteLine($"Point is located on (0,0,0): {point.IsZero()}");
 
-            Point point2 = new Point();
-            point2.Mass = -1;
-            point2.X = 2;
-            point2.Y = 3;
-            point2.Z = 1;
+            Point point2 = new Point(2, 3, 1, -1);
 
-            Point point3 = new Point();
-            point3.Mass = -1;
-            point3.X = 8;
-            point3.Y = -5;
-            point3.Z = 0;
+            Point point3 = new Point(8, -5, 0, 5);
 
             Console.WriteLine($"Distance between point2 and point3 is {point2.DistanceBetweenPoints(point3)}");
 
@@ -39,7 +27,7 @@
             Console.WriteLine($"Sum of matrix elements is: {diagonalMatrix.Track()}\n");
             Console.WriteLine($"Size of matrix is: {diagonalMatrix.Size}\n");
 
-            DiagonalMatrix diagonalMatrix2 = new DiagonalMatrix(1,2,3,4,3);
+            DiagonalMatrix diagonalMatrix2 = new DiagonalMatrix(1, 2, 3, 4, 3);
             diagonalMatrix2[0, 0] = 4;
             Console.WriteLine($"{diagonalMatrix2.ToString()}");
             Console.WriteLine($"Value on [0,0] is: {diagonalMatrix2[0, 0]}");
@@ -55,10 +43,9 @@
             Console.WriteLine($"{diagonalMatrix3.ToString()}");
             Console.WriteLine($"Are equals? {diagonalMatrix3.Equals(diagonalMatrix2)}\n");
 
-            DiagonalMatrix resultMatrix = diagonalMatrix2.Extension(diagonalMatrix);
+            DiagonalMatrix resultMatrix = diagonalMatrix2.SumDiagonalMatrixs(diagonalMatrix3);
             Console.WriteLine($"{resultMatrix.ToString()}");
             Console.WriteLine($"Sum of matrix elements is: {resultMatrix.Track()}");
-
 
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
@@ -72,6 +59,7 @@
             training.Add(practicalLesson);
             training.Add(practicalLesson2);
             Console.WriteLine($"Is Practical? {training.IsPractical()}");
+
             Training training2 = training.Clone();
             training2.Add(lecture);
             Console.WriteLine($"Is Practical? {training2.IsPractical()}");

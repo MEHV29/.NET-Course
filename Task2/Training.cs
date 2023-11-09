@@ -1,54 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Task2
 {
-    internal class Training
+    internal class Training : Description
     {
-        private string textDescription;
-        private object[] content;
-        private int sizeContent;
+        private Lesson[] _content;
+        private int _sizeContent;
 
-        public Training(string textDescription, object[] content)
+        public Training(string textDescription, Lesson[] content)
         {
-            this.textDescription = textDescription;
-            this.content = content;
-            this.sizeContent = content.Length;
+            this.TextDescription = textDescription;
+            this._content = content;
+            this._sizeContent = content.Length;
         }
 
         public Training(string textDescription)
         {
-            this.textDescription = textDescription;
+            this.TextDescription = textDescription;
         }
 
-        public Training(object[] content)
+        public Training(Lesson[] content)
         {
-            this.content = content;
+            this._content = content;
         }
 
-        public void Add(object obj)
+        public void Add(Lesson obj)
         {
-            object[] tempContent = new object[++sizeContent];
-            if (sizeContent > 1)
+            Lesson[] tempContent = new Lesson[++_sizeContent];
+            if (_sizeContent > 1)
             {
-                for(int i = 0; i < sizeContent - 1; i++)
+                for (int i = 0; i < _sizeContent - 1; i++)
                 {
-                    tempContent[i] = this.content[i];
+                    tempContent[i] = this._content[i];
                 }
             }
-            tempContent[sizeContent - 1] = obj;
-            this.content = tempContent;
+            tempContent[_sizeContent - 1] = obj;
+            this._content = tempContent;
         }
 
         public bool IsPractical()
         {
-            foreach (object obj in content)
+            foreach (Lesson obj in _content)
             {
-                if (obj is Lecture) return false;
+                if (obj is Lecture)
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -56,7 +59,27 @@ namespace Task2
 
         public Training Clone()
         {
-            return new Training(textDescription, content);
+            Lesson[] _cloneContent = new Lesson[_content.Length];
+            for(int i = 0; i < _content.Length; i++)
+            {
+                if (_content[i] is Lecture)
+                {
+                    string textDescription = _content[i].TextDescription;
+                    string topic = ((Lecture)_content[i]).Topic;
+                    Lecture lecture = new Lecture(textDescription, topic);
+                    _cloneContent[i] = lecture;
+                }
+                else
+                {
+                    string textDescription = _content[i].TextDescription;
+                    string linkToTaskCondition = ((PracticalLesson)_content[i]).LinkToTaskCondition;
+                    string linkToSolution = ((PracticalLesson)_content[i]).LinkToSolution;
+                    PracticalLesson practicalLesson = new PracticalLesson(textDescription, linkToTaskCondition, linkToSolution);
+                    _cloneContent[i] = practicalLesson;
+                }
+            }
+            
+            return new Training(TextDescription, _cloneContent);
         }
     }
 }

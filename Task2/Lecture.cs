@@ -6,15 +6,19 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
-    internal class Lecture
+    internal class Lecture : Lesson
     {
-        private string textDescription;
-        private string topic;
+        private string _topic;
+
+        public string Topic
+        {
+            get { return _topic; }
+        }
 
         public Lecture(string textDescription, string topic)
         {
-            this.textDescription = textDescription;
-            this.topic = topic;
+            this.TextDescription = textDescription;
+            this._topic = topic;
         }
     }
 }

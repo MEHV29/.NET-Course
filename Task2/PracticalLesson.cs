@@ -6,17 +6,26 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
-    internal class PracticalLesson
+    internal class PracticalLesson : Lesson
     {
-        private string textDescription;
-        private string linkToTaskCondition;
-        private string linkToSolution;
+        private string _linkToTaskCondition;
+        private string _linkToSolution;
+
+        public string LinkToTaskCondition
+        {
+            get { return _linkToTaskCondition; }
+        }
+
+        public string LinkToSolution
+        {
+            get { return _linkToSolution; }
+        }
 
         public PracticalLesson(string textDescription, string linkToTaskCondition, string linkToSolution)
         {
-            this.textDescription = textDescription;
-            this.linkToTaskCondition = linkToSolution;
-            this.linkToSolution = linkToTaskCondition;
+            this.TextDescription = textDescription;
+            this._linkToTaskCondition = linkToSolution;
+            this._linkToSolution = linkToTaskCondition;
         }
     }
 }
