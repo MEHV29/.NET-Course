@@ -62,21 +62,7 @@ namespace Task2
             Lesson[] _cloneContent = new Lesson[_content.Length];
             for(int i = 0; i < _content.Length; i++)
             {
-                if (_content[i] is Lecture)
-                {
-                    string textDescription = _content[i].TextDescription;
-                    string topic = ((Lecture)_content[i]).Topic;
-                    Lecture lecture = new Lecture(textDescription, topic);
-                    _cloneContent[i] = lecture;
-                }
-                else
-                {
-                    string textDescription = _content[i].TextDescription;
-                    string linkToTaskCondition = ((PracticalLesson)_content[i]).LinkToTaskCondition;
-                    string linkToSolution = ((PracticalLesson)_content[i]).LinkToSolution;
-                    PracticalLesson practicalLesson = new PracticalLesson(textDescription, linkToTaskCondition, linkToSolution);
-                    _cloneContent[i] = practicalLesson;
-                }
+                _cloneContent[i] = _content[i].Clone();
             }
             
             return new Training(TextDescription, _cloneContent);

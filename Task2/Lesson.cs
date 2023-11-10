@@ -8,5 +8,6 @@ namespace Task2
 {
     internal abstract class Lesson : Description
     {
+        public abstract Lesson Clone();
     }
 }

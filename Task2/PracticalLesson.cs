@@ -27,5 +27,13 @@ namespace Task2
             this._linkToTaskCondition = linkToSolution;
             this._linkToSolution = linkToTaskCondition;
         }
+
+        public override PracticalLesson Clone()
+        {
+            string textDescription = this.TextDescription;
+            string linkToTaskCondition = this.LinkToTaskCondition;
+            string linkToSolution = this.LinkToSolution;
+            return new PracticalLesson(textDescription, linkToTaskCondition, linkToSolution);
+        }
     }
 }

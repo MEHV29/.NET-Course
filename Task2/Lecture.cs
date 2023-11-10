@@ -20,5 +20,12 @@ namespace Task2
             this.TextDescription = textDescription;
             this._topic = topic;
         }
+
+        public override Lecture Clone()
+        {
+            string textDescription = this.TextDescription;
+            string topic = this.Topic;
+            return new Lecture(textDescription, topic);
+        }
     }
 }
