@@ -8,82 +8,100 @@ namespace Task3_1
 {
     internal class Queue<T> : IQueue<T>
     {
-        private int _size;
+        private int _head;
+        private int _tail;
         private int _maximumCapacity;
         private T[] _queue;
 
-        public Queue()
+        public int MaximumCapacity
         {
-            _size = 0;
-            _queue = new T[_size];
-            //The maximum capacity its 32 by default for testing purposes only 
-            _maximumCapacity = 32;
+            get
+            {
+                return _maximumCapacity;
+            }
+        }
+
+        public int Tail
+        {
+            get
+            {
+                return _tail;
+            }
+            private set
+            {
+                _tail = value;
+            }
+        }
+
+        public int Head
+        {
+            get
+            {
+                return _head;
+            }
+            private set
+            {
+                _head = value;
+            }
         }
 
         public Queue(int maximumCapacity)
         {
-            _size = 0;
-            _queue = new T[_size];
+            _head = 0;
+            _tail = 0;
             _maximumCapacity = maximumCapacity;
+            _queue = new T[MaximumCapacity];
         }
 
-        public Queue(T[] queue)
+        public Queue(T[] queue, int tail)
         {
             _queue = queue;
-            _size = _queue.Length;
-            _maximumCapacity = 32;
+            _maximumCapacity = _queue.Length;
+            _tail = tail;
         }
 
         public object Clone()
         {
-            T[] _tempQueue = new T[_queue.Length];
+            T[] _tempQueue = new T[MaximumCapacity];
 
-            for (int i = 0; i < _queue.Length; i++)
+            for (int i = 0; i < Tail; i++)
             {
                 _tempQueue[i] = _queue[i];
             }
 
-            return new Queue<T>(_tempQueue);
+            return new Queue<T>(_tempQueue, Tail);
         }
 
         public void Dequeue()
         {
-            if( _queue.Length == 0 )
+            if (Head == Tail)
             {
                 throw new Exception("Cannot dequeue from an empty queue");
             }
 
-            T[] _tempQueue = new T[--_size];
-            for(int i = 0; i < _queue.Length - 1; i++)
+            for (int i = 0; i < Tail - 1; i++)
             {
-                _tempQueue[i] = _queue[i + 1];
+                _queue[i] = _queue[i + 1];
             }
 
-            _queue = _tempQueue;
+            Tail--;
         }
 
         public void Enqueue(T item)
         {
-            if (_queue.Length + 1 > _maximumCapacity)
+            if (Tail == MaximumCapacity)
             {
                 throw new Exception("Queue has reached its maximum capacity");
             }
 
-            T[] _tempQueue = new T[++_size];
+            _queue[Tail] = item;
 
-            for(int i = 0; i < _queue.Length; i++)
-            {
-                _tempQueue[i] = _queue[i];
-            }
-
-            _tempQueue[_tempQueue.Length - 1] = item;
-
-            _queue = _tempQueue;
+            Tail++;
         }
 
         public bool IsEmpty()
         {
-            if(_queue == null || _size == 0)
+            if (_queue == null || Tail == 0)
             {
                 return true;
             }
@@ -95,9 +113,9 @@ namespace Task3_1
         {
             string output = "[";
 
-            foreach (T item in _queue)
+            for (int i = 0; i < Tail; i++)
             {
-                output += item.ToString() + ",";
+                output += _queue[i] + ",";
             }
 
             output += "]\n";
