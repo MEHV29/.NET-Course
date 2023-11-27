@@ -5,7 +5,7 @@
         static void Main(string[] args)
         {
             RationalNumber rationalNumber = new RationalNumber(6, 8);
-            RationalNumber rationalNumber2 = new RationalNumber(4, 11);
+            RationalNumber rationalNumber2 = new RationalNumber(1, 1024);
             RationalNumber rationalNumber3 = new RationalNumber(2, 6);
             Console.WriteLine(rationalNumber.ToString());
             Console.WriteLine($"Are Equals: {rationalNumber.Equals(rationalNumber2)}");
@@ -38,7 +38,7 @@
             Console.WriteLine($"\nResult of multiply: {resultMultiply.ToString()}");
 
             RationalNumber rationalNumberDivide = new RationalNumber(5, 6);
-            RationalNumber rationalNumberDivide2 = new RationalNumber(4, 3);
+            RationalNumber rationalNumberDivide2 = new RationalNumber(0, 3);
             RationalNumber resultDivide = rationalNumberDivide / rationalNumberDivide2;
             Console.WriteLine($"\nResult of divide: {resultDivide.ToString()}");
 

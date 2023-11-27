@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task4_2
+﻿namespace Task4_2
 {
     internal sealed class RationalNumber : IComparable
     {
         public int Numerator { get; }
 
-        public byte Denominator { get; }
+        public ushort Denominator { get; }
 
-        public RationalNumber(int numerator, byte denominator)
+        public RationalNumber(int numerator, ushort denominator)
         {
             if (denominator == 0)
             {
@@ -22,7 +16,7 @@ namespace Task4_2
             int gcd = GetGCD(numerator, denominator);
 
             Numerator = numerator / gcd;
-            Denominator = (byte)(denominator / gcd);
+            Denominator = ((ushort)(denominator / gcd));
         }
 
         public override bool Equals(object? obj)
@@ -60,30 +54,26 @@ namespace Task4_2
 
         public int CompareTo(object? obj)
         {
-            if (obj is RationalNumber)
+            if (obj is RationalNumber other)
             {
-                double doubleNumber = (double)(RationalNumber)obj;
-                double doubleNumber2 = (double)this;
+                int crossProduct1 = this.Numerator * other.Denominator;
+                int crossProduct2 = other.Numerator * this.Denominator;
 
-                if (doubleNumber < doubleNumber2)
-                {
-                    return -1;
-                }
-                else if (doubleNumber == doubleNumber2)
-                {
-                    return 0;
-                }
-
-                return 1;
+                return crossProduct2.CompareTo(crossProduct1);
             }
             else
             {
-                throw new Exception("Object is not a Rational Number");
+                throw new ArgumentException("Object is not a RationalNumber");
             }
         }
 
         public static RationalNumber operator +(RationalNumber number, RationalNumber other)
         {
+            if(number == null || other == null)
+            {
+                throw new ArgumentException("Operation cannot be applied for null values");
+            }
+
             if (number.Denominator == other.Denominator)
             {
                 var numerator = number.Numerator + other.Numerator;
@@ -96,12 +86,17 @@ namespace Task4_2
                 var numerator = number.Numerator * other.Denominator;
                 var numerator2 = other.Numerator * number.Denominator;
 
-                return new RationalNumber(numerator + numerator2, (byte)denominator);
+                return new RationalNumber(numerator + numerator2, (ushort)denominator);
             }
         }
 
         public static RationalNumber operator -(RationalNumber number, RationalNumber other)
         {
+            if (number == null || other == null)
+            {
+                throw new ArgumentException("Operation cannot be applied for null values");
+            }
+
             if (number.Denominator == other.Denominator)
             {
                 var numerator = number.Numerator - other.Numerator;
@@ -114,12 +109,17 @@ namespace Task4_2
                 var numerator = number.Numerator * other.Denominator;
                 var numerator2 = other.Numerator * number.Denominator;
 
-                return new RationalNumber(numerator - numerator2, (byte)denominator);
+                return new RationalNumber(numerator - numerator2, (ushort)denominator);
             }
         }
 
         public static RationalNumber operator *(RationalNumber number, RationalNumber other)
         {
+            if (number == null || other == null)
+            {
+                throw new ArgumentException("Operation cannot be applied for null values");
+            }
+
             var numerator = number.Numerator * other.Numerator;
             var denominator = number.Denominator * other.Denominator;
 
@@ -128,14 +128,29 @@ namespace Task4_2
 
         public static RationalNumber operator /(RationalNumber number, RationalNumber other)
         {
+            if (number == null || other == null)
+            {
+                throw new ArgumentException("Operation cannot be applied for null values");
+            }
+
+            if(other.Numerator == 0)
+            {
+                throw new ArgumentException("Operation cannot be applied when Numerator from other its 0");
+            }
+
             var numerator = number.Numerator * other.Denominator;
             var denominator = number.Denominator * other.Numerator;
 
-            return new RationalNumber(numerator, (byte)denominator);
+            return new RationalNumber(numerator, (ushort)denominator);
         }
 
         public static explicit operator double(RationalNumber rational)
         {
+            if (rational == null)
+            {
+                throw new ArgumentException("Casting cannot be applied for null value");
+            }
+
             return (double)rational.Numerator / rational.Denominator;
         }
 
