@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task4_1
+﻿namespace Task4_1
 {
     internal class DiagonalMatrix<T>
     {
         private T[] _elementsLocatedOnDiagonal;
         private int _size;
-
-        public delegate void EventHandler(object sender, ElementChangedEventArgs<T> e);
-
-        public delegate T DelegateMethods(T a, T b);
 
         public event EventHandler ElementChanged;
 
@@ -86,6 +75,11 @@ namespace Task4_1
             }
         }
 
+        /// <summary>
+        /// Its called when an element is changed and invoke the event element.
+        /// It is done in a function in case in the future it is necessary to do more than just invoke the event.
+        /// </summary>
+        /// <param name="e">Arguments to pass to the event</param>
         protected virtual void OnElementChanged(ElementChangedEventArgs<T> e)
         {
             ElementChanged?.Invoke(this, e);

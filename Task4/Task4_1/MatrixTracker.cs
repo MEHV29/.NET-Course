@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task4_1
+﻿namespace Task4_1
 {
     internal class MatrixTracker<T>
     {
@@ -20,11 +14,14 @@ namespace Task4_1
             matrix.ElementChanged += ElementHasChanged;
         }
 
-        void ElementHasChanged(object sender, ElementChangedEventArgs<T> e)
+        void ElementHasChanged(object sender, EventArgs e)
         {
-            _newValue = e.NewValue;
-            _oldValue = e.OldValue;
-            _index = e.Index;
+            if(e is ElementChangedEventArgs<T> elementChangedEventArgs)
+            {
+                _newValue = elementChangedEventArgs.NewValue;
+                _oldValue = elementChangedEventArgs.OldValue;
+                _index = elementChangedEventArgs.Index;
+            }
         }
 
         public void Undo()

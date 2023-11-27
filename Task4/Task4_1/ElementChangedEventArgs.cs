@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task4_1
+﻿namespace Task4_1
 {
-    internal class ElementChangedEventArgs<T>
+    internal class ElementChangedEventArgs<T> : EventArgs
     {
         public T OldValue { get; }
         public T NewValue { get; }
