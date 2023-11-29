@@ -12,6 +12,7 @@
             sparseMatrix[2, 2] = 3;
             sparseMatrix[3, 3] = 9;
             sparseMatrix[4, 4] = 9;
+            sparseMatrix[4, 4] = 10;
             Console.WriteLine(sparseMatrix.ToString());
 
             Console.WriteLine("\nElements order by row");

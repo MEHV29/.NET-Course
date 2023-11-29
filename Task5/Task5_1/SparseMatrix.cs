@@ -32,6 +32,11 @@ namespace Task5_1
                     throw new IndexOutOfRangeException("Invalid matrix indices");
                 }
 
+                if (_matrixElement.Exists(x => x.rowIndex == i && x.colIndex == j))
+                {
+                    throw new ArgumentException("Cannot add an element with the same index");
+                }
+
                 _matrixElement.Add((i, j, value));
             }
         }
