@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Task5_2
 {
-    internal class Catalog<isbn, book>
+    internal class Catalog<isbn, book> : IEnumerable<book>
     {
         private Dictionary<isbn, book> _catalog;
 
@@ -17,7 +11,7 @@ namespace Task5_2
         {
             get
             {
-                key = simplifyString(key);
+                key = SimplifyString(key);
 
                 if (_catalog.ContainsKey(key))
                 {
@@ -25,12 +19,12 @@ namespace Task5_2
                 }
                 else
                 {
-                    throw new KeyNotFoundException($"Key '{key}' not found in the dictionary.");
+                    return default(book);
                 }
             }
             set
             {
-                key = simplifyString(key);
+                key = SimplifyString(key);
 
                 _catalog[key] = value;
             }
@@ -43,12 +37,12 @@ namespace Task5_2
 
         public void Add(isbn key, book value)
         {
-            key = simplifyString(key);
+            key = SimplifyString(key);
 
             _catalog.Add(key, value);
         }
 
-        isbn simplifyString(isbn isbn)
+        isbn SimplifyString(isbn isbn)
         {
             string keyCast = isbn.ToString();
 
@@ -62,7 +56,7 @@ namespace Task5_2
                 keyCast = keyCast.Replace("-", "");
             }
 
-            if(keyCast.Length < 13 || !ContainsOnlyNumbers(keyCast))
+            if (keyCast.Length < 13 || !ContainsOnlyNumbers(keyCast))
             {
                 throw new ArgumentException("Isbn is not valid");
             }
@@ -96,14 +90,7 @@ namespace Task5_2
 
         public IEnumerable<Book> GetByAuthor(string author)
         {
-            List<Book> books = new List<Book>();
-
-            foreach (var book in _catalog)
-            {
-                books.Add(book.Value as Book);
-            }
-
-            return books.FindAll(book => book.Authors.Contains(author)).OrderBy(book => book.PublicationDate);
+            return _catalog.Values.Cast<Book>().ToList().FindAll(book => book.Authors.Contains(author)).OrderBy(book => book.PublicationDate);
         }
 
         public IEnumerable<(string, int)> GetNumberBooksForAllAuthors()
@@ -112,7 +99,7 @@ namespace Task5_2
 
             foreach (var book in _catalog)
             {
-                foreach(var author in (book.Value as Book).Authors)
+                foreach (var author in (book.Value as Book).Authors)
                 {
                     if (!string.IsNullOrEmpty(author))
                     {
@@ -129,6 +116,16 @@ namespace Task5_2
             }
 
             return authorBookCount.OrderBy(author => author.Key).Select(pair => (pair.Key, pair.Value));
+        }
+
+        public IEnumerator<book> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }

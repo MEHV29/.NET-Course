@@ -17,7 +17,7 @@
             catalog.Add("4587861890123", book4);
             catalog.Add("1587861890123", book5);
 
-            Book bookCatalog = catalog["987-4-54-789012-3"];
+            Book bookCatalog = catalog["2587861890123"];
 
             foreach(var book in catalog.OrderAlphabetically())
             {
