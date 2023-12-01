@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 namespace Task5_1
 {
@@ -23,7 +17,14 @@ namespace Task5_1
                     throw new IndexOutOfRangeException("Invalid matrix indices");
                 }
 
-                return _matrixElement.Find(x => x.rowIndex == i && x.colIndex == j).value;
+                if(_matrixElement.Exists(x => x.rowIndex == i && x.colIndex == j))
+                {
+                    return _matrixElement.Find(x => x.rowIndex == i && x.colIndex == j).value;
+                }
+                else
+                {
+                    return 0;
+                }
             }
             set
             {
@@ -32,12 +33,16 @@ namespace Task5_1
                     throw new IndexOutOfRangeException("Invalid matrix indices");
                 }
 
-                if (_matrixElement.Exists(x => x.rowIndex == i && x.colIndex == j))
-                {
-                    throw new ArgumentException("Cannot add an element with the same index");
-                }
+                int index = _matrixElement.FindIndex(x => x.rowIndex == i && x.colIndex == j);
 
-                _matrixElement.Add((i, j, value));
+                if (index != -1)
+                {
+                    _matrixElement[index] = (i, j, value);
+                }
+                else
+                {
+                    _matrixElement.Add((i, j, value));
+                }
             }
         }
 
@@ -108,7 +113,7 @@ namespace Task5_1
 
         public int GetCount(long x)
         {
-            if(x == 0)
+            if (x == 0)
             {
                 return (_numCols * _numRows) - GetNonzeroElements().Count();
             }
