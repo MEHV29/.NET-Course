@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Task6
 {
+    //XML Serialize requires that class to be public
     [XmlRoot("Catalog")]
     public class Catalog<isbn, book> : IXmlSerializable
     {
@@ -134,6 +134,54 @@ namespace Task6
                 }
             }
             return authorBookCount.OrderBy(author => author.Key).Select(pair => (pair.Key, pair.Value));
+        }
+
+        public IEnumerable<(Author, List<(string, Book)>)> GetBooksForAllAuthors()
+        {
+            Dictionary<Author, List<(string, Book)>> authorWithBooks = new Dictionary<Author, List<(string, Book)>>();
+
+            foreach (var book in _catalog)
+            {
+                foreach (var author in (book.Value as Book).Authors)
+                {
+                    if (author != null)
+                    {
+                        if (authorWithBooks.ContainsKey(author))
+                        {
+                            authorWithBooks[author].Add((book.Key.ToString(), book.Value as Book));
+                        }
+                        else
+                        {
+                            authorWithBooks.Add(author, new List<(string, Book)> { (book.Key.ToString(), book.Value as Book) });
+                        }
+                    }
+                }
+            }
+            return authorWithBooks.OrderBy(author => author.Key).Select(pair => (pair.Key, pair.Value));
+        }
+
+        public IEnumerable<(Author, List<(string, Book)>)> GetBookjsForAllAuthors()
+        {
+            Dictionary<Author, List<(string, Book)>> authorWithBooks = new Dictionary<Author, List<(string, Book)>>();
+
+            foreach (var book in _catalog)
+            {
+                foreach (var author in (book.Value as Book).Authors)
+                {
+                    if (author != null)
+                    {
+                        if (authorWithBooks.ContainsKey(author))
+                        {
+                            authorWithBooks[author].Add((book.Key.ToString(), book.Value as Book));
+                        }
+                        else
+                        {
+                            authorWithBooks.Add(author, new List<(string, Book)> { (book.Key.ToString(), book.Value as Book) });
+                        }
+                    }
+                }
+            }
+            return authorWithBooks.OrderBy(author => author.Key).Select(pair => (pair.Key, pair.Value));
         }
         public XmlSchema GetSchema() => null;
 

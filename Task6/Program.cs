@@ -26,34 +26,16 @@
             //catalog.Add("9781951151881", book5);
             catalog.Add("9780670691999", book5);
             catalog.Add("9786073814003", book6);
-            /*
-            Book bookCatalog = catalog["2587861890123"];
-
-            foreach (var book in catalog.OrderAlphabetically())
-            {
-                Console.WriteLine(book.Title);
-            }
-
-            Console.WriteLine();
-
-            foreach (var book in catalog.GetByAuthor(author5))
-            {
-                Console.WriteLine(book.Title);
-            }
-
-            Console.WriteLine();
-
-            foreach (var author in catalog.GetNumberBooksForAllAuthors())
-            {
-                Console.WriteLine(author);
-            }
-            */
             
-            IRepository repository = new XMLRepository();
-            repository.Serialize(catalog);
-            Catalog<string, Book> catalogXml = repository.Deserialize();
-
-            Console.WriteLine(catalog.Equals(catalogXml));
+            IRepository repositoryXML = new XMLRepository();
+            repositoryXML.Serialize(catalog);
+            Catalog<string, Book> catalogXml = repositoryXML.Deserialize();
+            Console.WriteLine($"Is equals XML to Original Object? {catalog.Equals(catalogXml)}\n");
+            
+            IRepository repositoryJSON = new JSONRepository();
+            repositoryJSON.Serialize(catalog);
+            Catalog<string, Book> catalogJSON = repositoryJSON.Deserialize();
+            Console.WriteLine($"Is equals JSON to Original Object? {catalog.Equals(catalogJSON)}");
         }
     }
 }

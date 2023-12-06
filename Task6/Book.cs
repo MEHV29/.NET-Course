@@ -1,9 +1,11 @@
-﻿using System.Xml;
+﻿using System.Text.Json.Serialization;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Task6
 {
+    //XML Serialize requires that class to be public
     public class Book : IXmlSerializable
     {
         string _title;
@@ -22,12 +24,13 @@ namespace Task6
         {
             get { return _authors; }
         }
-
+        //XML Serialize requires an empty contructor
         public Book()
         {
-
+            _authors = new List<Author>();
         }
 
+        [JsonConstructor]
         public Book(string title, string publicationDate, List<Author> authors)
         {
             if (string.IsNullOrEmpty(title))

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace Task6
 {
-    public class Author : IXmlSerializable
+    //XML Serialize requires that class to be public
+    public class Author : IXmlSerializable,IComparable
     {
         string _firstName;
         string _lastName;
@@ -29,12 +26,13 @@ namespace Task6
         {
             get => _dateBirth;
         }
-
+        //XML Serialize requires an empty contructor
         public Author()
         {
 
         }
 
+        [JsonConstructor]
         public Author(string firstName, string lastName, string dateBirth)
         {
             _firstName = firstName.Substring(0, Math.Min(firstName.Length, 200));
@@ -84,6 +82,11 @@ namespace Task6
             return _firstName == otherAuthor._firstName &&
                    _lastName == otherAuthor._lastName &&
                    _dateBirth == otherAuthor._dateBirth;
+        }
+
+        public int CompareTo(object? obj)
+        {
+            return _firstName.CompareTo((obj as Author).FirstName);
         }
     }
 }
