@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Task5_2
 {
-    internal class Catalog<isbn, book> : IEnumerable<book>
+    internal class Catalog<isbn, book>
     {
         private Dictionary<isbn, book> _catalog;
 
@@ -46,46 +46,28 @@ namespace Task5_2
         {
             string keyCast = isbn.ToString();
 
-            if (keyCast.Contains("-"))
-            {
-                if (!CheckFormat(keyCast))
-                {
-                    throw new ArgumentException("Isbn is not valid");
-                }
-
-                keyCast = keyCast.Replace("-", "");
-            }
-
-            if (keyCast.Length < 13 || !ContainsOnlyNumbers(keyCast))
-            {
-                throw new ArgumentException("Isbn is not valid");
-            }
+            keyCast = Format(keyCast);
 
             return (isbn)(object)keyCast;
         }
 
-        static bool CheckFormat(string s)
+        static string Format(string s)
         {
-            string pattern = @"^\d{3}-\d-\d{2}-\d{6}-\d$";
+            string pattern = @"^.{13}(|\d{4})$|^\d{3}(-\d-\d{2}-\d{6}-\d|\d{13})$";
 
-            return Regex.IsMatch(s, pattern);
-        }
-
-        bool ContainsOnlyNumbers(string s)
-        {
-            return long.TryParse(s, out _);
+            if (!Regex.IsMatch(s, pattern))
+            {
+                throw new ArgumentException("Isbn is not valid");
+            }
+            else
+            {
+                return s.Replace("-", "");
+            }
         }
 
         public IEnumerable<Book> OrderAlphabetically()
         {
-            List<Book> books = new List<Book>();
-
-            foreach (var book in _catalog)
-            {
-                books.Add(book.Value as Book);
-            }
-
-            return books.OrderBy(book => book.Title);
+            return _catalog.Values.Cast<Book>().OrderBy(book => book.Title);
         }
 
         public IEnumerable<Book> GetByAuthor(string author)
@@ -95,37 +77,12 @@ namespace Task5_2
 
         public IEnumerable<(string, int)> GetNumberBooksForAllAuthors()
         {
-            Dictionary<string, int> authorBookCount = new Dictionary<string, int>();
-
-            foreach (var book in _catalog)
-            {
-                foreach (var author in (book.Value as Book).Authors)
-                {
-                    if (!string.IsNullOrEmpty(author))
-                    {
-                        if (authorBookCount.ContainsKey(author))
-                        {
-                            authorBookCount[author]++;
-                        }
-                        else
-                        {
-                            authorBookCount[author] = 1;
-                        }
-                    }
-                }
-            }
-
-            return authorBookCount.OrderBy(author => author.Key).Select(pair => (pair.Key, pair.Value));
-        }
-
-        public IEnumerator<book> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
+            return _catalog.Values
+        .SelectMany(book => (book as Book).Authors.Where(author => !string.IsNullOrEmpty(author)),
+            (book, author) => new { Author = author, Book = book })
+        .GroupBy(pair => pair.Author)
+        .OrderBy(group => group.Key)
+        .Select(group => (group.Key, Count: group.Count()));
         }
     }
 }
