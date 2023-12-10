@@ -1,12 +1,9 @@
 ﻿using System.Text.Json.Serialization;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
+using Task6.DAL.Repositories.XML.XMLEntities;
 
 namespace Task6
 {
-    //XML Serialize requires that class to be public
-    public class Author : IXmlSerializable,IComparable
+    public class Author : IComparable
     {
         string _firstName;
         string _lastName;
@@ -26,11 +23,6 @@ namespace Task6
         {
             get => _dateBirth;
         }
-        //XML Serialize requires an empty contructor
-        public Author()
-        {
-
-        }
 
         [JsonConstructor]
         public Author(string firstName, string lastName, string dateBirth)
@@ -40,38 +32,11 @@ namespace Task6
             _dateBirth = dateBirth;
         }
 
-        public XmlSchema GetSchema() => null;
-
-        public void ReadXml(XmlReader reader)
+        public Author(XMLAuthor xmlAuthor)
         {
-            reader.ReadStartElement();
-            reader.ReadStartElement("FirstName");
-            _firstName = reader.ReadContentAsString();
-            reader.ReadEndElement();
-
-            reader.ReadStartElement("LastName");
-            _lastName = reader.ReadContentAsString();
-            reader.ReadEndElement();
-
-            reader.ReadStartElement("DateBirth");
-            _dateBirth = reader.ReadContentAsString();
-            reader.ReadEndElement();
-            reader.ReadEndElement();
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("FirstName");
-            writer.WriteValue(_firstName);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("LastName");
-            writer.WriteValue(_lastName);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("DateBirth");
-            writer.WriteValue(_dateBirth);
-            writer.WriteEndElement();
+            this._firstName = xmlAuthor.FirstName;
+            this._lastName = xmlAuthor.LastName;
+            this._dateBirth = xmlAuthor.DateBirth;
         }
 
         public override bool Equals(object obj)

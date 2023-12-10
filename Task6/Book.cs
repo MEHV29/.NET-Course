@@ -1,12 +1,9 @@
 ﻿using System.Text.Json.Serialization;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
+using Task6.DAL.Repositories.XML.XMLEntities;
 
 namespace Task6
 {
-    //XML Serialize requires that class to be public
-    public class Book : IXmlSerializable
+    public class Book
     {
         string _title;
         string _publicationDate;
@@ -24,11 +21,6 @@ namespace Task6
         {
             get { return _authors; }
         }
-        //XML Serialize requires an empty contructor
-        public Book()
-        {
-            _authors = new List<Author>();
-        }
 
         [JsonConstructor]
         public Book(string title, string publicationDate, List<Author> authors)
@@ -43,50 +35,11 @@ namespace Task6
             _authors = authors;
         }
 
-        public XmlSchema GetSchema() => null;
-
-        public void ReadXml(XmlReader reader)
+        public Book(XMLBook xmlBook)
         {
-            reader.ReadStartElement();
-            reader.ReadStartElement("Title");
-            _title = reader.ReadContentAsString();
-            reader.ReadEndElement();
-
-            reader.ReadStartElement("PublicationDate");
-            _publicationDate = reader.ReadContentAsString();
-            reader.ReadEndElement();
-
-            reader.ReadStartElement("Authors");
-            _authors = new List<Author>();
-            while (reader.IsStartElement("Author"))
-            {
-                var authorSerializer = new XmlSerializer(typeof(Author));
-                //reader.ReadStartElement("Author");
-                var author = (Author)authorSerializer.Deserialize(reader);
-                _authors.Add(author);
-                //reader.ReadEndElement();
-            }
-            reader.ReadEndElement();
-            reader.ReadEndElement();
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteStartElement("Title");
-            writer.WriteValue(_title);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("PublicationDate");
-            writer.WriteValue(_publicationDate);
-            writer.WriteEndElement();
-
-            writer.WriteStartElement("Authors");
-            foreach (var item in _authors)
-            {
-                var authorSerializer = new XmlSerializer(typeof(Author));
-                authorSerializer.Serialize(writer, item);
-            }
-            writer.WriteEndElement();
+            this._title = xmlBook.Title;
+            this._publicationDate = xmlBook.PublicationDate;
+            this._authors = xmlBook.Authors.ConvertAll(x => new Author(x));
         }
 
         public override bool Equals(object? obj)

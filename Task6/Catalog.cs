@@ -1,13 +1,9 @@
 ﻿using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
+using Task6.DAL.Repositories.XML.XMLEntities;
 
 namespace Task6
 {
-    //XML Serialize requires that class to be public
-    [XmlRoot("Catalog")]
-    public class Catalog<isbn, book> : IXmlSerializable
+    internal class Catalog<isbn, book>
     {
         private Dictionary<isbn, book> _catalog;
 
@@ -44,6 +40,12 @@ namespace Task6
             _catalog = new Dictionary<isbn, book>();
         }
 
+        public Catalog(XMLCatalog xmlCatalog)
+        {
+            _catalog = new Dictionary<isbn, book>();
+            _catalog = xmlCatalog.CatalogEntrys.ToDictionary(entry => (isbn)(object)entry.Key, entry => (book)(object)new Book(entry.Value));
+        }
+
         public void Add(isbn key, book value)
         {
             key = SimplifyString(key);
@@ -65,46 +67,28 @@ namespace Task6
         {
             string keyCast = isbn.ToString();
 
-            if (keyCast.Contains("-"))
-            {
-                if (!CheckFormat(keyCast))
-                {
-                    throw new ArgumentException("Isbn is not valid");
-                }
-
-                keyCast = keyCast.Replace("-", "");
-            }
-
-            if (keyCast.Length < 13 || !ContainsOnlyNumbers(keyCast))
-            {
-                throw new ArgumentException("Isbn is not valid");
-            }
+            keyCast = Format(keyCast);
 
             return (isbn)(object)keyCast;
         }
 
-        static bool CheckFormat(string s)
+        static string Format(string s)
         {
-            string pattern = @"^\d{3}-\d-\d{2}-\d{6}-\d$";
+            string pattern = @"^.{13}(|\d{4})$|^\d{3}(-\d-\d{2}-\d{6}-\d|\d{13})$";
 
-            return Regex.IsMatch(s, pattern);
-        }
-
-        bool ContainsOnlyNumbers(string s)
-        {
-            return long.TryParse(s, out _);
+            if (!Regex.IsMatch(s, pattern))
+            {
+                throw new ArgumentException("Isbn is not valid");
+            }
+            else
+            {
+                return s.Replace("-", "");
+            }
         }
 
         public IEnumerable<Book> OrderAlphabetically()
         {
-            List<Book> books = new List<Book>();
-
-            foreach (var book in _catalog)
-            {
-                books.Add(book.Value as Book);
-            }
-
-            return books.OrderBy(book => book.Title);
+            return _catalog.Values.Cast<Book>().OrderBy(book => book.Title);
         }
 
         public IEnumerable<Book> GetByAuthor(Author author)
@@ -114,128 +98,21 @@ namespace Task6
 
         public IEnumerable<(string, int)> GetNumberBooksForAllAuthors()
         {
-            Dictionary<string, int> authorBookCount = new Dictionary<string, int>();
-
-            foreach (var book in _catalog)
-            {
-                foreach (var author in (book.Value as Book).Authors)
-                {
-                    if (author != null)
-                    {
-                        if (authorBookCount.ContainsKey(author.FirstName + " " + author.LastName))
-                        {
-                            authorBookCount[author.FirstName + " " + author.LastName]++;
-                        }
-                        else
-                        {
-                            authorBookCount[author.FirstName + " " + author.LastName] = 1;
-                        }
-                    }
-                }
-            }
-            return authorBookCount.OrderBy(author => author.Key).Select(pair => (pair.Key, pair.Value));
+            return _catalog.Values.SelectMany(book => (book as Book).Authors, (book, author) => $"{author.FirstName} {author.LastName}")
+        .Where(authorFullName => authorFullName != null)
+        .GroupBy(authorFullName => authorFullName)
+        .OrderBy(group => group.Key)
+        .Select(group => (group.Key, Count: group.Count()));
         }
 
         public IEnumerable<(Author, List<(string, Book)>)> GetBooksForAllAuthors()
         {
-            Dictionary<Author, List<(string, Book)>> authorWithBooks = new Dictionary<Author, List<(string, Book)>>();
-
-            foreach (var book in _catalog)
-            {
-                foreach (var author in (book.Value as Book).Authors)
-                {
-                    if (author != null)
-                    {
-                        if (authorWithBooks.ContainsKey(author))
-                        {
-                            authorWithBooks[author].Add((book.Key.ToString(), book.Value as Book));
-                        }
-                        else
-                        {
-                            authorWithBooks.Add(author, new List<(string, Book)> { (book.Key.ToString(), book.Value as Book) });
-                        }
-                    }
-                }
-            }
-            return authorWithBooks.OrderBy(author => author.Key).Select(pair => (pair.Key, pair.Value));
-        }
-
-        public IEnumerable<(Author, List<(string, Book)>)> GetBookjsForAllAuthors()
-        {
-            Dictionary<Author, List<(string, Book)>> authorWithBooks = new Dictionary<Author, List<(string, Book)>>();
-
-            foreach (var book in _catalog)
-            {
-                foreach (var author in (book.Value as Book).Authors)
-                {
-                    if (author != null)
-                    {
-                        if (authorWithBooks.ContainsKey(author))
-                        {
-                            authorWithBooks[author].Add((book.Key.ToString(), book.Value as Book));
-                        }
-                        else
-                        {
-                            authorWithBooks.Add(author, new List<(string, Book)> { (book.Key.ToString(), book.Value as Book) });
-                        }
-                    }
-                }
-            }
-            return authorWithBooks.OrderBy(author => author.Key).Select(pair => (pair.Key, pair.Value));
-        }
-        public XmlSchema GetSchema() => null;
-
-        public void ReadXml(XmlReader reader)
-        {
-            while (reader.Read())
-            {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "CatalogEntry")
-                {
-                    isbn isbn = default(isbn);
-                    book book = default(book);
-
-                    while (reader.Read())
-                    {
-                        if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "CatalogEntry")
-                            break;
-
-                        if (reader.NodeType == XmlNodeType.Element)
-                        {
-                            switch (reader.Name)
-                            {
-                                case "ISBN":
-                                    reader.Read();
-                                    isbn = (isbn)Convert.ChangeType(reader.Value, typeof(isbn));
-                                    break;
-
-                                case "Book":
-                                    var bookSerializer = new XmlSerializer(typeof(book));
-                                    book = (book)bookSerializer.Deserialize(reader);
-                                    break;
-                            }
-                        }
-                    }
-
-                    _catalog[isbn] = book;
-                }
-            }
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            foreach (var item in _catalog)
-            {
-                writer.WriteStartElement("CatalogEntry");
-
-                writer.WriteStartElement("ISBN");
-                writer.WriteValue(item.Key.ToString());
-                writer.WriteEndElement();
-
-                var bookSerializer = new XmlSerializer(typeof(book));
-                bookSerializer.Serialize(writer, item.Value);
-
-                writer.WriteEndElement();
-            }
+            return _catalog
+        .SelectMany(pair => (pair.Value as Book).Authors, (pair, author) => new { Author = author, BookInfo = (pair.Key.ToString(), pair.Value as Book) })
+        .Where(info => info.Author != null)
+        .GroupBy(info => info.Author)
+        .OrderBy(group => group.Key)
+        .Select(group => (group.Key, Books: group.Select(info => info.BookInfo).ToList()));
         }
 
         public override bool Equals(object? obj)
