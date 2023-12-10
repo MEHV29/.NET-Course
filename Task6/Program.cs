@@ -1,4 +1,5 @@
 ﻿using Task6.DAL.Interfaces;
+using Task6.DAL.Repositories.JSON;
 using Task6.DAL.Repositories.XML;
 
 namespace Task6
@@ -29,18 +30,20 @@ namespace Task6
             //catalog.Add("9781951151881", book5);
             catalog.Add("9780670691999", book5);
             catalog.Add("9786073814003", book6);
-            /*
-            IRepository repositoryJSON = new JSONRepository();
-            repositoryJSON.Serialize(catalog);
-            Catalog<string, Book> catalogJSON = repositoryJSON.Deserialize();
-            Console.WriteLine($"Is equals JSON to Original Object? {catalog.Equals(catalogJSON)}");
-            */
-            IRepositoryWrite repositoryWrite = new XMLWriter();
-            repositoryWrite.SaveCatalog(catalog);
+            
+            IRepositoryWrite repositoryWriteXML = new XMLWriter();
+            repositoryWriteXML.SaveCatalog(catalog);
 
-            IRespositoryRead respositoryRead = new XMLReader();
-            Catalog<string, Book> catalogXML = respositoryRead.GetCatalog();
+            IRespositoryRead respositoryReadXML = new XMLReader();
+            Catalog<string, Book> catalogXML = respositoryReadXML.GetCatalog();
             Console.WriteLine($"Is equals XML to Original Object? {catalog.Equals(catalogXML)}\n");
+
+            IRepositoryWrite repositoryWriteJSON = new JSONWriter();
+            repositoryWriteJSON.SaveCatalog(catalog);
+
+            IRespositoryRead respositoryReadJSON = new JSONReader();
+            Catalog<string, Book> catalogJSONs = respositoryReadJSON.GetCatalogByAuthors(catalog);
+            Console.WriteLine($"Are equals JSONs to Original Object? {catalog.Equals(catalogJSONs)}");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Task6.DAL.Repositories.JSON.JSONEntities;
 using Task6.DAL.Repositories.XML.XMLEntities;
 
 namespace Task6
@@ -22,7 +22,6 @@ namespace Task6
             get { return _authors; }
         }
 
-        [JsonConstructor]
         public Book(string title, string publicationDate, List<Author> authors)
         {
             if (string.IsNullOrEmpty(title))
@@ -40,6 +39,13 @@ namespace Task6
             this._title = xmlBook.Title;
             this._publicationDate = xmlBook.PublicationDate;
             this._authors = xmlBook.Authors.ConvertAll(x => new Author(x));
+        }
+
+        public Book(JSONBook jsonBook)
+        {
+            this._title = jsonBook.Title;
+            this._publicationDate = jsonBook.PublicationDate;
+            this._authors = jsonBook.Authors.ConvertAll(x => new Author(x));
         }
 
         public override bool Equals(object? obj)

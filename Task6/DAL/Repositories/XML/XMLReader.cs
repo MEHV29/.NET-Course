@@ -16,5 +16,10 @@ namespace Task6.DAL.Repositories.XML
                 return new Catalog<string, Book>(xmlCatalog);
             }
         }
+
+        public Catalog<string, Book> GetCatalogByAuthors(Catalog<string, Book> catalog)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

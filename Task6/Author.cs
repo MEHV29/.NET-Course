@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Task6.DAL.Repositories.JSON.JSONEntities;
 using Task6.DAL.Repositories.XML.XMLEntities;
 
 namespace Task6
@@ -24,7 +24,6 @@ namespace Task6
             get => _dateBirth;
         }
 
-        [JsonConstructor]
         public Author(string firstName, string lastName, string dateBirth)
         {
             _firstName = firstName.Substring(0, Math.Min(firstName.Length, 200));
@@ -37,6 +36,13 @@ namespace Task6
             this._firstName = xmlAuthor.FirstName;
             this._lastName = xmlAuthor.LastName;
             this._dateBirth = xmlAuthor.DateBirth;
+        }
+
+        public Author(JSONAuthor jsonAuthor)
+        {
+            this._firstName = jsonAuthor.FirstName;
+            this._lastName = jsonAuthor.LastName;
+            this._dateBirth = jsonAuthor.DateBirth;
         }
 
         public override bool Equals(object obj)

@@ -3,5 +3,6 @@
     internal interface IRespositoryRead
     {
         Catalog<string, Book> GetCatalog();
+        Catalog<string, Book> GetCatalogByAuthors(Catalog<string, Book> catalog);
     }
 }

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace Task6
+﻿namespace Task6.DAL.Repositories.JSON.JSONEntities
 {
     internal class AuthorEntry
     {
