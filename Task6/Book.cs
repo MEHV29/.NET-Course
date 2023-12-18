@@ -26,11 +26,22 @@ namespace Task6
         {
             if (string.IsNullOrEmpty(title))
             {
-                throw new ArgumentNullException("title is null");
+                throw new ArgumentNullException("title cannot be null");
             }
 
             _title = title;
             _publicationDate = publicationDate;
+            _authors = authors;
+        }
+
+        public Book(string title, List<Author> authors)
+        {
+            if (string.IsNullOrEmpty(title))
+            {
+                throw new ArgumentNullException("title is null");
+            }
+
+            _title = title;
             _authors = authors;
         }
 

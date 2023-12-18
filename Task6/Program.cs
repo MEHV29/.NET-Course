@@ -1,4 +1,5 @@
-﻿using Task6.DAL.Interfaces;
+﻿using Task6.AbstractFactory;
+using Task6.DAL.Interfaces;
 using Task6.DAL.Repositories.JSON;
 using Task6.DAL.Repositories.XML;
 
@@ -22,6 +23,7 @@ namespace Task6
             Book book5 = new Book("The Talisman", "08-11-1984", new List<Author> { author4, author5 });
             Book book6 = new Book("IT", "15-09-1986", new List<Author> { author5 });
 
+            /*
             Catalog<string, Book> catalog = new Catalog<string, Book>();
             catalog.Add("978-0-14-241034-9", book1);
             catalog.Add("978-0-74-753274-3", book2);
@@ -44,6 +46,23 @@ namespace Task6
             IRespositoryRead respositoryReadJSON = new JSONReader();
             Catalog<string, Book> catalogJSONs = respositoryReadJSON.GetCatalogByAuthors(catalog);
             Console.WriteLine($"Are equals JSONs to Original Object? {catalog.Equals(catalogJSONs)}");
+            */
+            List<string> isbns = new List<string>();
+            isbns.Add("9788476727737");
+            isbns.Add("9788475727737");
+
+            Author authorEbook = new Author("Susan", "Kuklin");
+
+            PaperBook paperBook = new PaperBook("assdas", "01-06-2001", new List<Author> { author6 }, isbns, "Scholastic Inc.");
+            EBook eBook = new EBook("How my family lives in America", new List<Author> { authorEbook }, "howmyfamilylives00kukl", new List<string> { "ACS Encrypted EPUB", "ACS Encrypted PDF" });
+
+            Catalog<string, Book> catalogPaperBooks = new Catalog<string, Book>();
+            catalogPaperBooks.Add("0736793771", paperBook);
+
+            Catalog<string, Book> catalogEbooks = new Catalog<string, Book>();
+            catalogEbooks.Add("howmyfamilylives00kukl", eBook);
+
+            Library library = LibraryBuilder.BuildLibrary("PaperBook");
         }
     }
 }

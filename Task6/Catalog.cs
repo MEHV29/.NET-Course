@@ -16,7 +16,7 @@ namespace Task6
         {
             get
             {
-                key = SimplifyString(key);
+                key = SimplifyString(key, default(book));
 
                 if (_catalog.ContainsKey(key))
                 {
@@ -29,7 +29,7 @@ namespace Task6
             }
             set
             {
-                key = SimplifyString(key);
+                key = SimplifyString(key, value);
 
                 _catalog[key] = value;
             }
@@ -48,7 +48,7 @@ namespace Task6
 
         public void Add(isbn key, book value)
         {
-            key = SimplifyString(key);
+            key = SimplifyString(key, value);
 
             try
             {
@@ -63,27 +63,30 @@ namespace Task6
             }
         }
 
-        isbn SimplifyString(isbn isbn)
+        isbn SimplifyString(isbn isbn, book value)
         {
             string keyCast = isbn.ToString();
 
-            keyCast = Format(keyCast);
+            keyCast = Format(keyCast, value);
 
             return (isbn)(object)keyCast;
         }
 
-        static string Format(string s)
+        static string Format(string s, book value)
         {
             string pattern = @"^.{13}(|\d{4})$|^\d{3}(-\d-\d{2}-\d{6}-\d|\d{13})$";
+            string patternIsbnTen = @"^\d{10}$";
 
-            if (!Regex.IsMatch(s, pattern))
+            if (!Regex.IsMatch(s, pattern) && !Regex.IsMatch(s, patternIsbnTen) && value is not EBook && value != null)
             {
                 throw new ArgumentException("Isbn is not valid");
             }
-            else
+            else if(value is not EBook && value != null)
             {
                 return s.Replace("-", "");
             }
+
+            return s;
         }
 
         public IEnumerable<Book> OrderAlphabetically()
