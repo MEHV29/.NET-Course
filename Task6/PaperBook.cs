@@ -3,22 +3,22 @@
     internal class PaperBook : Book
     {
         List<string> _isbns;
-        string _publisher;
+        List<string> _publishers;
 
         public List<string> Isbns
         {
             get { return _isbns; }
         }
 
-        public string Publisher
+        public List<string> Publishers
         {
-            get { return _publisher; }
+            get { return _publishers; }
         }
 
-        public PaperBook(string title, string publicationDate, List<Author> authors, List<string> isbns, string publisher) : base(title, publicationDate, authors)
+        public PaperBook(string title, string publicationDate, List<Author> authors, List<string> isbns, List<string> publishers, bool isbnIsNull) : base(title, publicationDate, authors, isbnIsNull)
         {
             _isbns = isbns;
-            _publisher = publisher;
+            _publishers = publishers;
         }
     }
 }

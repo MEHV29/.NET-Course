@@ -74,10 +74,9 @@ namespace Task6
 
         static string Format(string s, book value)
         {
-            string pattern = @"^.{13}(|\d{4})$|^\d{3}(-\d-\d{2}-\d{6}-\d|\d{13})$";
-            string patternIsbnTen = @"^\d{10}$";
+            string pattern = @"^\d{3}(-\d-\d{2}-\d{6}-\d|\d{13})|\d+|[a-zA-Z]+\d{2,5}[a-zA-Z]+|[a-zA-Z]+[0-9]{2}[a-zA-Z]+[0-9]{1}$";
 
-            if (!Regex.IsMatch(s, pattern) && !Regex.IsMatch(s, patternIsbnTen) && value is not EBook && value != null)
+            if (!Regex.IsMatch(s, pattern) && value is not EBook && value != null && !(value as Book).IsbnIsNull)
             {
                 throw new ArgumentException("Isbn is not valid");
             }

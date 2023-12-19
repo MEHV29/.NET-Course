@@ -9,60 +9,37 @@ namespace Task6
     {
         static void Main(string[] args)
         {
-            Author author1 = new Author("Mary", "Shelley", "30-08-1797");
-            Author author2 = new Author("Roald", "Dahl", "13-09-1916");
-            Author author3 = new Author("J.K", "Rowling", "31-07-1965");
-            Author author4 = new Author("Peter", "Straub", "02-04-1943");
-            Author author5 = new Author("Stephen", "King", "21-09-1947");
-            Author author6 = new Author("George", "Orwell", "25-06-1903");
-
-            Book book1 = new Book("Fantastic Mr Fox", "01-06-1970", new List<Author> { author2 });
-            Book book2 = new Book("Harry Potter and the Philosopher's Stone", "26-06-1997", new List<Author> { author3 });
-            Book book3 = new Book("Frankenstein", "01-01-1818", new List<Author> { author1 });
-            Book book4 = new Book("Animal Farm", "17-08-1945", new List<Author> { author6 });
-            Book book5 = new Book("The Talisman", "08-11-1984", new List<Author> { author4, author5 });
-            Book book6 = new Book("IT", "15-09-1986", new List<Author> { author5 });
-
-            /*
-            Catalog<string, Book> catalog = new Catalog<string, Book>();
-            catalog.Add("978-0-14-241034-9", book1);
-            catalog.Add("978-0-74-753274-3", book2);
-            catalog.Add("9788476727737", book3);
-            catalog.Add("9781951151881", book4);
-            //catalog.Add("9781951151881", book5);
-            catalog.Add("9780670691999", book5);
-            catalog.Add("9786073814003", book6);
-            
             IRepositoryWrite repositoryWriteXML = new XMLWriter();
-            repositoryWriteXML.SaveCatalog(catalog);
-
             IRespositoryRead respositoryReadXML = new XMLReader();
-            Catalog<string, Book> catalogXML = respositoryReadXML.GetCatalog();
-            Console.WriteLine($"Is equals XML to Original Object? {catalog.Equals(catalogXML)}\n");
 
             IRepositoryWrite repositoryWriteJSON = new JSONWriter();
-            repositoryWriteJSON.SaveCatalog(catalog);
-
             IRespositoryRead respositoryReadJSON = new JSONReader();
-            Catalog<string, Book> catalogJSONs = respositoryReadJSON.GetCatalogByAuthors(catalog);
-            Console.WriteLine($"Are equals JSONs to Original Object? {catalog.Equals(catalogJSONs)}");
-            */
-            List<string> isbns = new List<string>();
-            isbns.Add("9788476727737");
-            isbns.Add("9788475727737");
 
-            Author authorEbook = new Author("Susan", "Kuklin");
+            Library libraryPaperBooks = LibraryBuilder.BuildLibrary("PaperBook");
 
-            PaperBook paperBook = new PaperBook("assdas", "01-06-2001", new List<Author> { author6 }, isbns, "Scholastic Inc.");
-            EBook eBook = new EBook("How my family lives in America", new List<Author> { authorEbook }, "howmyfamilylives00kukl", new List<string> { "ACS Encrypted EPUB", "ACS Encrypted PDF" });
+            repositoryWriteXML.SaveCatalog(libraryPaperBooks.Catalog);
 
-            Catalog<string, Book> catalogPaperBooks = new Catalog<string, Book>();
-            catalogPaperBooks.Add("0736793771", paperBook);
+            Catalog<string, Book> catalogXmlLibraryPaperBooks = respositoryReadXML.GetCatalog();
+            Console.WriteLine($"Is equals XMLLibraryPaperBooks to Original Object? {libraryPaperBooks.Catalog.Equals(catalogXmlLibraryPaperBooks)}\n");
 
-            Catalog<string, Book> catalogEbooks = new Catalog<string, Book>();
-            catalogEbooks.Add("howmyfamilylives00kukl", eBook);
+            repositoryWriteJSON.SaveCatalog(libraryPaperBooks.Catalog);
 
-            Library library = LibraryBuilder.BuildLibrary("PaperBook");
+            Catalog<string, Book> catalogJSONsLibraryPaperBooks = respositoryReadJSON.GetCatalogByAuthors(libraryPaperBooks.Catalog);
+            Console.WriteLine($"Are equals JSONsLibraryPaperBooks to Original Object? {libraryPaperBooks.Catalog.Equals(catalogJSONsLibraryPaperBooks)}\n");
+
+            Console.WriteLine();
+
+            Library libraryEbooks = LibraryBuilder.BuildLibrary("Ebook");
+            
+            repositoryWriteXML.SaveCatalog(libraryEbooks.Catalog);
+            
+            Catalog<string, Book> catalogXmlLibraryEbooks = respositoryReadXML.GetCatalog();
+            Console.WriteLine($"Is equals XMLLibraryEbooks to Original Object? {libraryEbooks.Catalog.Equals(catalogXmlLibraryEbooks)}\n");
+            
+            repositoryWriteJSON.SaveCatalog(libraryEbooks.Catalog);
+            
+            Catalog<string, Book> catalogJSONsLibraryEbooks = respositoryReadJSON.GetCatalogByAuthors(libraryEbooks.Catalog);
+            Console.WriteLine($"Are equals JSONsLibraryEbooks to Original Object? {libraryEbooks.Catalog.Equals(catalogJSONsLibraryEbooks)}");
         }
     }
 }
