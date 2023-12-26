@@ -6,11 +6,59 @@ namespace Task6.AbstractFactory
     internal class EbookLibrayAbstractFactory : ILibrayAbstractFactory
     {
         List<string> _uniqueFormats;
-        int isbnNull = 1;
+       
+        static string GetNumberPages(string htmlContent)
+        {
+            string htmlOpenTag = $"<span itemprop=\"numberOfPages\">";
+            string htmlCloseTag = $"</span>";
+
+            int index = htmlContent.IndexOf(htmlOpenTag, StringComparison.OrdinalIgnoreCase);
+
+            if (index != -1)
+            {
+                int endIndex = htmlContent.IndexOf(htmlCloseTag, index, StringComparison.OrdinalIgnoreCase);
+
+                if (endIndex != 1)
+                {
+                    string extractedContent = htmlContent.Substring(index + htmlOpenTag.Length, endIndex - (index + htmlOpenTag.Length));
+                    return extractedContent;
+                }
+                else
+                {
+                    throw new Exception("Close Tag not founded");
+                }
+            }
+            else
+            {
+                return "NOT FOUND";
+            }
+        }
+
+        static async Task DownloadHtmlAsync(string url, EBook eBook)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(url);
+
+                    response.EnsureSuccessStatusCode();
+
+                    string htmlContent = await response.Content.ReadAsStringAsync();
+
+                    eBook.Pages = GetNumberPages(htmlContent);
+                }
+                catch (HttpRequestException ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+        }
 
         public Catalog<string, Book> CreateCatalog()
         {
             _uniqueFormats = new List<string>();
+            List<Task> tasks = new List<Task>();
             string filePath = "books_info.csv";
             Catalog<string, Book> catalog = new Catalog<string, Book>();
 
@@ -40,7 +88,7 @@ namespace Task6.AbstractFactory
                             case "title":
                                 title = fields[i].Trim();
                                 break;
-                            
+
                             case "creator":
                                 List<string> resultList = new List<string>();
 
@@ -85,11 +133,11 @@ namespace Task6.AbstractFactory
                                 }
                                 break;
                             case "identifier":
-                                id = fields[i].Trim();
+                                id = "https://archive.org/details/" + fields[i].Trim();
                                 break;
                             case "format":
                                 formats = fields[i].Split(',').ToList();
-                                foreach(string format in formats)
+                                foreach (string format in formats)
                                 {
                                     if (!_uniqueFormats.Contains(format))
                                     {
@@ -101,9 +149,11 @@ namespace Task6.AbstractFactory
                     }
 
                     EBook eBook = new EBook(title, authorList, id, formats);
+                    tasks.Add(DownloadHtmlAsync(id, eBook));
                     catalog.Add(id, eBook);
                 }
             }
+            Task.WaitAll(tasks.ToArray());
 
             return catalog;
         }
