@@ -9,6 +9,8 @@ namespace Task6
         string _lastName;
         string _dateBirth;
 
+        const int MAX_LENGTH = 200;
+
         public string FirstName
         {
             get => _firstName;
@@ -26,7 +28,7 @@ namespace Task6
 
         public Author(string firstName, string lastName, string dateBirth)
         {
-            if(firstName.Length > 200 || lastName.Length > 200)
+            if(firstName.Length > MAX_LENGTH || lastName.Length > MAX_LENGTH)
             {
                 throw new ArgumentException("firstName and lastName cannot have more than 200 characters");
             }
@@ -38,7 +40,7 @@ namespace Task6
 
         public Author(string firstName, string lastName)
         {
-            if (firstName.Length > 200 || lastName.Length > 200)
+            if (firstName.Length > MAX_LENGTH || lastName.Length > MAX_LENGTH)
             {
                 throw new ArgumentException("firstName and lastName cannot have more than 200 characters");
             }

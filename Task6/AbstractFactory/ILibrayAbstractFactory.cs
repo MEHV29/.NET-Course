@@ -2,7 +2,7 @@
 {
     internal interface ILibrayAbstractFactory
     {
-        List<string> CreatePressReleaseItems();
-        Catalog<string, Book> CreateCatalog();
+        List<string> CreatePressReleaseItems(string filePath);
+        Catalog<string, Book> CreateCatalog(string filePath);
     }
 }

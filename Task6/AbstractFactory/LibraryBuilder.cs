@@ -19,8 +19,8 @@
             }
 
             Library library = new Library();
-            library.Catalog = libraryFactory.CreateCatalog();
-            library.PressReleaseItems = libraryFactory.CreatePressReleaseItems();
+            library.Catalog = libraryFactory.CreateCatalog("books_info.csv");
+            library.PressReleaseItems = libraryFactory.CreatePressReleaseItems("books_info.csv");
 
             return library;
         }
