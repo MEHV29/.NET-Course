@@ -1,4 +1,5 @@
 ﻿using Task6.AbstractFactory;
+using Task6.Multithreading;
 
 namespace Task6
 {
@@ -7,6 +8,7 @@ namespace Task6
         static void Main(string[] args)
         {
             Library libraryEbooks = LibraryBuilder.BuildLibrary("Ebook");
+            PagesBuilder.BuildPages(libraryEbooks.Catalog);
         }
     }
 }
