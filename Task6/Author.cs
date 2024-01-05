@@ -9,6 +9,8 @@ namespace Task6
         string _lastName;
         string _dateBirth;
 
+        const int MAX_LENGTH = 200;
+
         public string FirstName
         {
             get => _firstName;
@@ -26,9 +28,25 @@ namespace Task6
 
         public Author(string firstName, string lastName, string dateBirth)
         {
-            _firstName = firstName.Substring(0, Math.Min(firstName.Length, 200));
-            _lastName = lastName.Substring(0, Math.Min(lastName.Length, 200));
+            if(firstName.Length > MAX_LENGTH || lastName.Length > MAX_LENGTH)
+            {
+                throw new ArgumentException("firstName and lastName cannot have more than 200 characters");
+            }
+
+            _firstName = firstName;
+            _lastName = lastName;
             _dateBirth = dateBirth;
+        }
+
+        public Author(string firstName, string lastName)
+        {
+            if (firstName.Length > MAX_LENGTH || lastName.Length > MAX_LENGTH)
+            {
+                throw new ArgumentException("firstName and lastName cannot have more than 200 characters");
+            }
+
+            _firstName = firstName;
+            _lastName = lastName;
         }
 
         public Author(XMLAuthor xmlAuthor)
