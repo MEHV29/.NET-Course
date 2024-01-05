@@ -6,8 +6,9 @@ namespace Task6
     public class Book
     {
         string _title;
-        string _publicationDate;
+        string _publicationDate = string.Empty;
         List<Author> _authors;
+        bool _isbnIsNull = false;
 
         public string Title
         {
@@ -21,8 +22,25 @@ namespace Task6
         {
             get { return _authors; }
         }
+        public bool IsbnIsNull
+        {
+            get { return _isbnIsNull; }
+        }
 
-        public Book(string title, string publicationDate, List<Author> authors)
+        public Book(string title, string publicationDate, List<Author> authors, bool isbnIsNull)
+        {
+            if (string.IsNullOrEmpty(title))
+            {
+                throw new ArgumentNullException("title cannot be null");
+            }
+
+            _title = title;
+            _publicationDate = publicationDate;
+            _authors = authors;
+            _isbnIsNull = isbnIsNull;
+        }
+
+        public Book(string title, List<Author> authors)
         {
             if (string.IsNullOrEmpty(title))
             {
@@ -30,7 +48,6 @@ namespace Task6
             }
 
             _title = title;
-            _publicationDate = publicationDate;
             _authors = authors;
         }
 
